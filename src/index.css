@@ -8,3 +8,7 @@ body {
   color: aliceblue;
   background-color: #272727;
 }
+
+li {
+  list-style: none;
+}
