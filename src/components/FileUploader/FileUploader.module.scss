@@ -23,17 +23,17 @@
     border: 3px dashed blue;
     border-radius: 20px;
     filter: drop-shadow(-1px 1px 3px rgb(13, 10, 222));
-
-    &_title {
-      text-align: center;
-      line-height: 1.7;
+    &_ico {
+      font-size: 50px;
     }
   }
 }
 .previewFilesContainer {
-  .previewIco {
-    width: 100px;
-    padding: 10px;
-    margin: 10px;
+  .previewList {
+    &__ico {
+      width: 100px;
+      padding: 10px;
+      margin: 10px;
+    }
   }
 }
