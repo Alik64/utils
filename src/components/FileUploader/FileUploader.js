@@ -2,31 +2,46 @@ import { useState } from "react";
 import { getBase64 } from "../../utils/getBase64";
 import PropTypes from "prop-types";
 import cn from "classnames";
+import spinner from "../../assets/images/spinner.gif";
 import s from "./FileUploader.module.scss";
 
 const FileUploader = ({ multiple }) => {
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState({});
   const updateFileList = (filePayload) => {
     setFiles((prevState) => {
-      return [...prevState, filePayload];
+      return {
+        ...prevState,
+        [filePayload.name]: filePayload,
+      };
     });
   };
   console.log("files", files);
+
   const handleChange = (e) => {
     const filesList = e.target.files;
 
     for (const file of filesList) {
-      console.log(file);
+      updateFileList({
+        file,
+        name: file.name,
+        type: file.type,
+        imgUrl: null,
+        status: "OK",
+        isLoading: true,
+      });
+
       getBase64(file)
         .then((fileAsBase64) => {
-          updateFileList({
-            file,
-            name: file.name,
-            type: file.type,
-            imgUrl: fileAsBase64,
-            status: "OK",
-            isLoading: false,
-          });
+          setTimeout(() => {
+            updateFileList({
+              file,
+              name: file.name,
+              type: file.type,
+              imgUrl: fileAsBase64,
+              status: "OK",
+              isLoading: false,
+            });
+          }, 3000);
         })
         .catch((error) => {
           updateFileList({
@@ -55,13 +70,20 @@ const FileUploader = ({ multiple }) => {
         </label>
         <div className={s.previewFilesContainer}>
           <ul className={s.previewList}>
-            {files.map((item, index) => (
-              <li key={index} className={cn(s.previewList__item)}>
-                <img
-                  className={s.previewList__ico}
-                  src={item.imgUrl}
-                  alt={item.name}
-                />
+            {Object.entries(files).map(([key, value], index) => (
+              <li key={key} className={cn(s.previewList__item)}>
+                {value.imgUrl !== null && (
+                  <img
+                    className={s.previewList__ico}
+                    src={value.imgUrl}
+                    alt={key}
+                  />
+                )}
+                {value.isLoading && (
+                  <div>
+                    <img src={spinner} alt="spinner" />
+                  </div>
+                )}
               </li>
             ))}
           </ul>
