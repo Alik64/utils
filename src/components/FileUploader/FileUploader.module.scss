@@ -1,0 +1,84 @@
+@mixin mainDesign {
+  border: none;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px 0px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+    rgba(0, 0, 0, 0.2) 0px -3px 0px 0px inset;
+}
+
+.root {
+  height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.spinner {
+  display: flex;
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 50%;
+}
+.uploader {
+  text-align: center;
+
+  &__title {
+    margin-bottom: 20px;
+  }
+  &__inputFile {
+    display: none;
+  }
+  &__dropZone {
+    @include mainDesign;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 200px;
+    &_ico {
+      font-size: 50px;
+    }
+  }
+}
+.previewFilesContainer {
+  .previewList {
+    position: relative;
+
+    &__item {
+      @include mainDesign;
+      margin: 10px 0;
+      width: 340px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+
+      &_description {
+        line-height: 1.4;
+      }
+
+      &_ico {
+        width: 100px;
+        height: 100px;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 50%;
+      }
+    }
+
+    &__deleteButton {
+      @include mainDesign;
+      position: absolute;
+      right: 0;
+      height: 100px;
+      width: 50px;
+      background: inherit;
+      cursor: pointer;
+      &:active {
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
+          rgb(209, 213, 219) 0px 0px 0px 1px inset;
+      }
+    }
+  }
+}
