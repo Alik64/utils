@@ -57,6 +57,14 @@ const FileUploader = ({ multiple }) => {
         });
     }
   };
+
+  const handleDeleteButtonClick = (name) => {
+    setFiles((prevState) => {
+      const copyState = { ...prevState };
+      delete copyState[name];
+      return copyState;
+    });
+  };
   return (
     <div className={s.root}>
       <div className={s.uploader}>
@@ -64,6 +72,7 @@ const FileUploader = ({ multiple }) => {
         <label className={s.uploader__dropZone}>
           <span className={s.uploader__dropZone_ico}>💾</span>
           <input
+            accept="image/*"
             type="file"
             className={s.uploader__inputFile}
             onChange={handleChange}
@@ -82,7 +91,7 @@ const FileUploader = ({ multiple }) => {
                   />
                 )}
                 {value.isLoading && (
-                  <div className={s.previewList__item_ico}>
+                  <div className={s.spinner}>
                     <img src={spinner} alt="spinner" />
                   </div>
                 )}
@@ -95,6 +104,12 @@ const FileUploader = ({ multiple }) => {
                   <p>{value.name}</p>
                   <p>{formatSize(value.file.size)}</p>
                 </div>
+                <button
+                  className={s.previewList__deleteButton}
+                  onClick={() => handleDeleteButtonClick(value.name)}
+                >
+                  ❌
+                </button>
               </li>
             ))}
           </ul>
