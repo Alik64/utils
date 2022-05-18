@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getBase64 } from "../../utils/getBase64";
+import { formatSize } from "../../utils/formatSize";
 import PropTypes from "prop-types";
 import cn from "classnames";
 import spinner from "../../assets/images/spinner.gif";
@@ -44,6 +45,7 @@ const FileUploader = ({ multiple }) => {
           }, 3000);
         })
         .catch((error) => {
+          console.log(error);
           updateFileList({
             file,
             name: file.name,
@@ -74,16 +76,25 @@ const FileUploader = ({ multiple }) => {
               <li key={key} className={cn(s.previewList__item)}>
                 {value.imgUrl !== null && (
                   <img
-                    className={s.previewList__ico}
+                    className={s.previewList__item_ico}
                     src={value.imgUrl}
                     alt={key}
                   />
                 )}
                 {value.isLoading && (
-                  <div>
+                  <div className={s.previewList__item_ico}>
                     <img src={spinner} alt="spinner" />
                   </div>
                 )}
+                {value.status === "ERROR" && (
+                  <div className={s.previewList__item_ico}>
+                    <span className={s.uploader__dropZone_ico}>⛔️</span>
+                  </div>
+                )}
+                <div className={s.previewList__item_description}>
+                  <p>{value.name}</p>
+                  <p>{formatSize(value.file.size)}</p>
+                </div>
               </li>
             ))}
           </ul>

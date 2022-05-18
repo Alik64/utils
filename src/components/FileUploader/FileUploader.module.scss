@@ -30,10 +30,21 @@
 }
 .previewFilesContainer {
   .previewList {
-    &__ico {
-      width: 100px;
-      padding: 10px;
-      margin: 10px;
+    &__item {
+      margin: 10px 0;
+      width: 300px;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      border: 2px dashed #0000ff;
+      border-radius: 20px;
+
+      &_ico {
+        width: 100px;
+        height: 100px;
+        padding: 10px;
+        margin: 10px;
+      }
     }
   }
 }
