@@ -1,13 +1,36 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getBase64 } from "../../utils/getBase64";
 import { formatSize } from "../../utils/formatSize";
 import PropTypes from "prop-types";
 import cn from "classnames";
 import spinner from "../../assets/images/spinner.gif";
+import download from "../../assets/images/download.gif";
+
 import s from "./FileUploader.module.scss";
 
-const FileUploader = ({ multiple }) => {
+const getData = (data) => {
+  return Object.values(data).map((item) => item.file);
+};
+
+const FileUploader = ({ multiple, onFinish }) => {
   const [files, setFiles] = useState({});
+  const [dragZone, setDragZone] = useState(false);
+  const inputRef = useRef(null);
+
+  const isFinish = useMemo(
+    () =>
+      Object.keys(files).length > 0
+        ? Object.values(files).every((item) => item.isLoading === false)
+        : false,
+    [files]
+  );
+
+  useEffect(() => {
+    if (isFinish) {
+      onFinish(getData(files));
+    }
+  }, [isFinish]);
+
   const updateFileList = (filePayload) => {
     setFiles((prevState) => {
       return {
@@ -16,7 +39,6 @@ const FileUploader = ({ multiple }) => {
       };
     });
   };
-  console.log("files", files);
 
   const handleChange = (e) => {
     const filesList = e.target.files;
@@ -56,6 +78,7 @@ const FileUploader = ({ multiple }) => {
           });
         });
     }
+    onFinish && onFinish(files);
   };
 
   const handleDeleteButtonClick = (name) => {
@@ -69,9 +92,34 @@ const FileUploader = ({ multiple }) => {
     <div className={s.root}>
       <div className={s.uploader}>
         <h1 className={s.uploader__title}>Upload file</h1>
-        <label className={s.uploader__dropZone}>
-          <span className={s.uploader__dropZone_ico}>💾</span>
+        <label
+          className={s.uploader__dropZone}
+          onDragOver={(e) => {
+            e.nativeEvent.preventDefault();
+            setDragZone(true);
+          }}
+          onDragLeave={(e) => {
+            e.nativeEvent.preventDefault();
+            setDragZone(false);
+          }}
+          onDrop={(e) => {
+            e.nativeEvent.preventDefault();
+            inputRef.current.files = e.nativeEvent.dataTransfer.files;
+            inputRef.current.dispatchEvent(
+              new Event("change", { bubbles: true })
+            );
+            setDragZone(false);
+          }}
+        >
+          {dragZone ? (
+            <span className={s.uploader__dropZone_ico}>
+              <img src={download} alt="download" />
+            </span>
+          ) : (
+            <span className={s.uploader__dropZone_ico}>💾</span>
+          )}
           <input
+            ref={inputRef}
             accept="image/*"
             type="file"
             className={s.uploader__inputFile}
@@ -124,6 +172,7 @@ FileUploader.defaultProps = {
 };
 FileUploader.propTypes = {
   multiple: PropTypes.bool,
+  onFinish: PropTypes.func,
 };
 
 export default FileUploader;
